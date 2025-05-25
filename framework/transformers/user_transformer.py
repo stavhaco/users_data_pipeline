@@ -10,7 +10,11 @@ class UserTransformer(DataTransformer):
             when(col("user_data.mail").isNull(), col("user_data.otherMails")[0]).otherwise(col("user_data.mail")).alias("mail"),
             col("user_data.userType").alias("user_type"),
             col("user_data.usageLocation").alias("location"),
-            col("user_data.accountEnabled").alias("is_enabled"),
+            when(
+                col("user_data.accountEnabled") == True, True
+            ).when(
+                col("user_data.accountEnabled") == False, False
+            ).otherwise(None).alias("is_enabled"),
             col("user_data.givenName").alias("first_name"),
             col("user_data.surname").alias("last_name")
         )
